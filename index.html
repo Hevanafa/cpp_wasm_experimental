@@ -27,6 +27,7 @@ async function initWebAssembly() {
 
 async function init() {
   await initWebAssembly();
+  wasm.exports.init();
 
   /**
    * @type {HTMLCanvasElement}
@@ -35,7 +36,7 @@ async function init() {
   const ctx = canvas.getContext("2d");
   const imageData = ctx.createImageData(320, 200);
 
-  wasm.exports.fillCornflowerBlue();
+  wasm.exports.draw();
 
   // flush
   const pixelPtr = wasm.exports.getSurfacePtr();
