@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>C++ with WebAssembly</title>
+</head>
+<body>
+  <canvas id="test" width="320" height="200"></canvas>
+
+  <script>
+
+const importObject = {
+  env: {}
+}
+
+/**
+ * @type {WebAssembly.Instance}
+ */
+let wasm;
+
+async function initWebAssembly() {
+  // Init WebAssembly
+  const response = await fetch("main.wasm");
+  const bytes = await response.arrayBuffer();
+  const result = await WebAssembly.instantiate(bytes, importObject);
+  wasm = result.instance;
+}
+
+async function init() {
+  await initWebAssembly();
+
+  /**
+   * @type {HTMLCanvasElement}
+   */
+  const canvas = document.getElementById("test");
+  const ctx = canvas.getContext("2d");
+  const imageData = ctx.createImageData(320, 200);
+
+  wasm.exports.fillCornflowerBlue();
+
+  // flush
+  const pixelPtr = wasm.exports.getSurfacePtr();
+  const pixelBuffer = new Uint8ClampedArray(
+    wasm.exports.memory.buffer,
+    pixelPtr,
+    320 * 200 * 4
+  );
+
+  imageData.data.set(pixelBuffer);
+  ctx.putImageData(imageData, 0, 0)
+}
+
+init()
+
+  </script>
+</body>
+</html>
