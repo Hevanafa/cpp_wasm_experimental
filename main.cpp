@@ -1,11 +1,16 @@
 #include <emscripten.h>
 #include <stdint.h>
 
-uint8_t surface[320 * 200 * 4];
+#define PByte uint8_t*
+#define nil nullptr
+
+PByte surface = nil;
 
 extern "C" {
   EMSCRIPTEN_KEEPALIVE  // This prevents the compiler from removing unused functions
-  uint8_t* getSurfacePtr() { return surface; }
+  PByte getSurfacePtr() { return surface; }
+
+  // Add more functions here
 }
 
 
@@ -21,7 +26,7 @@ void fillCornflowerBlue() {
 
 
 void initBuffer() {
-  // TODO: initialise surface with C++'s getmem
+  surface = (PByte)malloc(320 * 200 * 4);
 }
 
 extern "C" EMSCRIPTEN_KEEPALIVE
@@ -32,7 +37,6 @@ void draw() {
   fillCornflowerBlue();
 }
 
-extern "C" EMSCRIPTEN_KEEPALIVE
-void init() {
+EXPORT void init() {
   initBuffer();
 }
