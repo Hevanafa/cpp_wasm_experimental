@@ -50,9 +50,12 @@ async function init() {
 
   imageData.data.set(pixelBuffer);
   ctx.putImageData(imageData, 0, 0)
+
+  wasm.exports.cleanup();
+  console.log("Reached the end of index");
 }
 
-init()
+init();
 
   </script>
 </body>

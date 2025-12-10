@@ -1,9 +1,20 @@
 #include <emscripten.h>
 #include <stdint.h>
 
+// Pascal dialect of C++
+#define export extern "C" EMSCRIPTEN_KEEPALIVE
 #define PByte uint8_t*
 #define nil nullptr
+#define getmem malloc
+#define freemem free
+#define ne !=
+#define eq ==
+#define then_begin {
+#define begin {
+#define end }
+#define procedure void
 
+// Begin C++
 PByte surface = nil;
 
 extern "C" {
@@ -26,17 +37,22 @@ void fillCornflowerBlue() {
 
 
 void initBuffer() {
-  surface = (PByte)malloc(320 * 200 * 4);
+  surface = (PByte)getmem(320 * 200 * 4);
 }
 
-extern "C" EMSCRIPTEN_KEEPALIVE
-void update() {}
+export procedure cleanup() begin
+  if (surface ne nil) then_begin
+    freemem(surface);
+    surface = nil;
+  end;
+end
 
-extern "C" EMSCRIPTEN_KEEPALIVE
-void draw() {
+export void update() {}
+
+export procedure draw() {
   fillCornflowerBlue();
 }
 
-EXPORT void init() {
+export procedure init() {
   initBuffer();
 }
