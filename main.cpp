@@ -5,14 +5,8 @@
 #define export extern "C" EMSCRIPTEN_KEEPALIVE
 #define PByte uint8_t*
 #define nil nullptr
-#define getmem malloc
-#define freemem free
-#define ne !=
-#define eq ==
-#define then_begin {
-#define begin {
-#define end }
-#define procedure void
+// getmem --> malloc
+// freemem --> free
 
 // Begin C++
 PByte surface = nil;
@@ -37,22 +31,22 @@ void fillCornflowerBlue() {
 
 
 void initBuffer() {
-  surface = (PByte)getmem(320 * 200 * 4);
+  surface = (PByte)malloc(320 * 200 * 4);
 }
 
-export procedure cleanup() begin
-  if (surface ne nil) then_begin
-    freemem(surface);
+export void cleanup() {
+  if (surface != nil) {
+    free(surface);
     surface = nil;
-  end;
-end
+  }
+}
 
 export void update() {}
 
-export procedure draw() {
+export void draw() {
   fillCornflowerBlue();
 }
 
-export procedure init() {
+export void init() {
   initBuffer();
 }
