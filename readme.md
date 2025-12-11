@@ -36,3 +36,14 @@ I'm using a Windows 10 machine to compile & run this project
    ```powershell
    emcc --version
    ```
+
+## Microsoft's C++ Extension Setup for VSCode
+
+1. Install this one: [C/C++ by Microsoft](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
+2. Add this in the `includePath`:
+
+   ```powershell
+   E:\emsdk\upstream\emscripten\cache\sysroot\include
+   ```
+
+   The path depends on where you installed `emsdk`
